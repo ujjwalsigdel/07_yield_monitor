@@ -360,7 +360,6 @@ yieldmap_clean <- ggplot(yield17_w_pf)+
           size = .1)+
   scale_color_viridis_b()
 
-
 yieldmap_clean
 ```
 
@@ -374,7 +373,6 @@ yieldmap_clean_int <- yield17_w_pf %>%
         lwd = 0,
         map.types = "Esri.WorldImagery"
 )
-
 yieldmap_clean_int
 ```
 
@@ -385,7 +383,7 @@ yieldmap_raw + yieldmap_clean
 
 ## Side-by-side raw vs. cleaned yield map interactive  
 ```{r}
-
+yieldmap_raw_int + yieldmap_clean_int
 ```
 
 # Exporting cleaned version  
