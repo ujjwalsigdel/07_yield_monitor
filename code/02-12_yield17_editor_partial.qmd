@@ -383,12 +383,14 @@ yieldmap_raw + yieldmap_clean
 
 ## Side-by-side raw vs. cleaned yield map interactive  
 ```{r}
-yieldmap_raw_int + yieldmap_clean_int
+sync(yieldmap_raw_int, yieldmap_clean_int)
 ```
 
 # Exporting cleaned version  
 ```{r}
-
+write_sf(yield17_w_pf,
+         "../output/yield17_clean.geojson",
+         delete_dsn = TRUE)
 
 ```
 
