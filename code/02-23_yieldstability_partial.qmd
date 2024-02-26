@@ -95,7 +95,17 @@ Let's check how does this standardization looks like in space.
 sy_17_map <- ggplot()+
   geom_sf(data = sy_17,
           aes(fill = sy_17$sy17),
-          color = NA)
+          color = NA)+
+  scale_fill_gradient2(low = "#440154FF",
+                       mid = "white",
+                       high = "#22a884ff",
+                       midpoint = 100,
+                       breaks = seq(0, 180, 20)
+                       )+
+  labs(title = "2017",
+       fill = "Median- \nstandarized \nyield")+
+  theme_map()+
+  theme(legend.position = 'right')
 
 
 sy_17_map 
@@ -103,7 +113,10 @@ sy_17_map
 Repeat the same steps for 2019.  
 
 ```{r sy_19}
-sy_19 
+sy_19 <- yieldic19 %>% 
+  mutate(median_yield_lbac = median(ipyield_lbac)) %>% 
+  mutate(sy = round(ipyield_lbac/median_yield_lbac*100, 1)) %>% 
+  dplyr::select(sy19 = sy, geometry)
 
 sy_19
 ```
@@ -129,7 +142,10 @@ sy_19_map
 Repeat the same steps for 2020.  
 
 ```{r sy_20}
-sy_20  
+sy_20 <- yieldic20 %>% 
+  mutate(median_yield_lbac = median(ipyield_lbac)) %>% 
+  mutate(sy = round(ipyield_lbac/median_yield_lbac*100, 1)) %>% 
+  dplyr::select(sy20 = sy, geometry) 
 
 sy_20
 ```
