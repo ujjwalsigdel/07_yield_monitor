@@ -1,0 +1,48 @@
+---
+title: "Assignment #7"
+author: "UJJWAL SIGDEL"
+format:
+  html:
+    toc: true
+    number-sections: true
+    embed-resources: true
+---
+
+After reading the paper **"2007 Cox & Gerard - Soil Management Zone Determination by Yield Stability Analysis and Classification"**, answer the following questions:  
+
+# Which crop was studied on this paper?  
+Ans: 'Soybean' was studies on this paper. 
+
+# Which standardization method was used (numerical based on a sample statistic OR categorical based on quantiles)?  
+Ans: Numerical based on a sample statistic was used as a method of standardization.
+
+# Which sample statistic was used for the standardization? Is that the same as the one we used in class?  
+Ans: 'Mean' was used for the standardization. In class, median was used. 
+
+# How was temporal stability determined? Which metric was used for it?
+Ans: Temporal stability was determined using coefficients of variation (CV) for each yield location in the field. The CV greater than equal to 30% were filtered out as inconsistent and unstable.
+
+# Write down the rules used to categorize data points into one of the 4 classes of inconsistent (or unstable), consistently high yield, consistently average yield, and consistently low yield? 
+The yield points where the values were greater than and equal to 30% were classified as inconsistent. The standardized mean yield values that have CV lesser than 30% were divided into three yield classes:  
+mean standardized yield values > 120% : high
+mean standardized yield values >80% and <120: average
+mean standardized yield values <80% : low
+
+# What percentage of all yield cells were classified as inconsistent (or unstable), consistently high yield, consistently average yield, and consistently low yield for the South Field?
+In the South Field, of all 6959 yield cells, 38% were classified as inconsistent; 14, 45, and 3 % were classified as consistently high yield, average yield, and low yield. 
+
+# What percentage of all yield cells were classified as inconsistent (or unstable), consistently high yield, consistently average yield, and consistently low yield for the North Field?
+In the North Field, of all 3339 yield cells, 16% were classified as inconsistent; 19, 57, and 8 % were classified as consistently high yield, average yield, and low yield. 
+
+# What percentage of all yield cells were classified as inconsistent (or unstable), consistently high yield, consistently average yield, and consistently low yield for the East Field?
+In the East Field, of all 8544 yield cells, 39% were classified as inconsistent; 26, 30, and 5 % were classified as consistently high yield, average yield, and low yield. 
+
+---
+
+After answering all questions, render this quarto file to html, include your last name on the file name (e.g., A4-questions-Bastos.html) and send to **lmbastos@uga.edu** by **Monday, Feb 26th 11:59 pm**.  
+
+
+
+
+
+

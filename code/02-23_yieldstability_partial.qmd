@@ -100,7 +100,8 @@ sy_17_map <- ggplot()+
                        mid = "white",
                        high = "#22a884ff",
                        midpoint = 100,
-                       breaks = seq(0, 180, 20)
+                       breaks = seq(0, 180, 20),
+                       limits = c(0, 180)
                        )+
   labs(title = "2017",
        fill = "Median- \nstandarized \nyield")+
@@ -130,7 +131,8 @@ sy_19_map <- ggplot()+
                        mid = "white",
                        high = "#22A884FF",
                        midpoint = 100,
-                       breaks = seq(0,180,20)
+                       breaks = seq(0,180,20),
+                       limits = c(0, 180)
   )+
   labs(title="2019")+
   theme_map()+
@@ -159,7 +161,8 @@ sy_20_map <- ggplot()+
                        mid = "white",
                        high = "#22A884FF",
                        midpoint = 100,
-                       breaks = seq(0,180,20)
+                       breaks = seq(0,180,20),
+                       limits = c(0, 180)
   )+
   labs(title = "2020")+
   theme_map()+
@@ -197,7 +200,19 @@ First, let's merge the 3 data sets and calculate pixel-based mean and cv.
 
 ## Pixel-based mean and cv  
 ```{r}
-sy_all 
+sy_all <- sy_17 %>% 
+  st_join(sy_19, 
+          join = st_equals,
+          left = T
+          ) %>% 
+  st_join(sy_20,
+          join = st_equals,
+          left = T
+          ) %>% 
+  rowwise() %>% 
+  mutate(mean_pixel = mean(c(sy17, sy19, sy20))) %>% 
+  mutate(sd_pixel = sd(c(sy17, sy19, sy20))) %>% 
+  mutate(cv_pixel = (sd_pixel/mean_pixel)*100)
 
 sy_all
 

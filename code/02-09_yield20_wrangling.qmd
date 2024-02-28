@@ -1,0 +1,178 @@
+---
+title: "Yield monitor wrangling - 2020"
+author: "Ujjwal Sigdel"
+format:
+  html:
+    code-fold: false
+    embed-resources: true
+    toc: true
+    number-sections: true
+    theme: journal
+    #cerulean, journal, quartz, sketchy, slate, morph, superhero, vapor
+knitr: 
+  opts_chunk: 
+    message: false
+    warning: false
+---
+
+# Learning objectives  
+Today's learning objectives are:  
+
+- Talk about the role of yield monitor data in ag  
+- Import yield data  
+- Explore with tables, plots, and maps (EDA)  
+- Learn and implement data wrangling steps for geospatial data  
+
+# Setup  
+## Loading packages  
+```{r setup }
+#| message: false
+
+#loading packages (add to the list as we need) 
+library(readr)
+library(janitor)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(sf)
+library(viridis)
+library(mapview)
+
+```
+
+## Importing data  
+```{r yield20 }
+yield20 <- read_csv("../data/07 yield20.csv")
+
+yield20 
+
+```
+
+# EDA  
+```{r summary}
+summary(yield20) 
+```
+
+What columns do you think are relevant?  
+
+```{r yield distribution - density plot}
+ggplot(yield20, aes(x=lb_ac))+
+  geom_density()
+
+```
+
+```{r speed distribution - density plot}
+ggplot(yield20, aes(x=Speed_mi_h))+
+  geom_density()+
+  geom_rug()
+
+```
+
+```{r yield map}
+ggplot(yield20, aes(x= POINT_X,
+                    y = POINT_Y))+
+  geom_point(aes(color = lb_ac))+
+  scale_color_viridis_b()
+
+```
+
+```{r yield restricted map}
+yield20 %>% 
+  filter(lb_ac < 3000) %>% 
+ggplot(aes(x= POINT_X,
+                    y = POINT_Y))+
+  geom_point(aes(color = lb_ac))+
+  scale_color_viridis_b()
+  
+
+```
+
+```{r yield x speed}
+ggplot(yield20, aes(x=Speed_mi_h, 
+                    y=lb_ac))+
+  geom_point()+
+  geom_smooth()
+
+```
+Do we need to clean this data?  
+From a yield map quality perspective, what steps would you do?  
+
+- Clean based on speed  
+- Clean based on yield  
+
+```{r data needs}
+yield20
+```
+
+From a data wrangling perspective, what steps would you do?  
+
+- standardize column naming style (for ease of use)  
+- select only needed columns:  
+
+  - Speed  
+  - Dry_Yield  
+  - POINT_X  
+  - POINT_Y  
+
+- rename columns to include measurement units  
+- create columns in metric system  
+- transform it into spatial object (as of now, it is only a data frame)  
+- transform from geographic (unprojected) to projected  
+
+# Wrangling  
+```{r yield20_w}
+yield20_w <- yield20 %>% 
+  # Cleaning names
+  clean_names() %>% 
+  # Selecting desired variables and renaming some of them
+  dplyr::select(speed_mph = speed_mi_h,
+                yield_lbac = lb_ac,
+                point_x,
+                point_y) %>% 
+  # Transforming from english to metric units
+  mutate(yield_kgha=yield_lbac*0.453592/0.404686,
+         Speed_kmh=speed_mph*1.60934) %>% 
+
+  # Transforming into sf object
+  st_as_sf(coords = c("point_x", "point_y")) %>% 
+  # Setting native crs (geographic)
+  st_set_crs(value = 4326) %>% 
+  # Transforming from geodraphic to prjected CRS
+  st_transform(crs = 6345) #32616?6345
+yield20_w
+
+```
+
+# Maps  
+```{r static}
+yield20_w %>%
+  filter(yield_lbac < 3000) %>%
+  ggplot()+
+  geom_sf(aes(color = yield_lbac), size = .1)+
+  scale_color_viridis_b()
+
+```
+
+```{r interactive}
+yield20_w %>%
+  filter(yield_lbac < 3000) %>% 
+  mapview(zcol = 'yield_lbac',
+          alpha.regions = 1,
+          cex = .1,
+          lwd = 0,
+          map.types = 'Esri.WorldImagery'
+          )
+
+```
+
+
+
+# Exporting  
+```{r}
+write_sf(yield20_w, 
+         "../data/yield20_processed.geojson",
+         delete_dsn = T)
+
+```
+
+
